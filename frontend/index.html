@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Wortholic Researcher - AI-Powered Research Platform</title>
+    <meta name="description" content="Wortholic Researcher: Professional AI-powered research platform for comprehensive insights and analysis">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="./static/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --wortholic-primary: #3b82f6;
+            --wortholic-secondary: #6366f1;
+            --wortholic-accent: #10b981;
+            --wortholic-bg: #0f172a;
+            --wortholic-card: #1e293b;
+            --wortholic-border: #334155;
+            --wortholic-text: #f1f5f9;
+            --wortholic-text-secondary: #cbd5e1;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--wortholic-bg);
+            color: var(--wortholic-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--wortholic-card);
+            border-right: 1px solid var(--wortholic-border);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--wortholic-border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .sidebar-title {
+            color: var(--wortholic-text);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .sidebar-subtitle {
+            color: var(--wortholic-text-secondary);
+            font-size: 0.8rem;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1.5rem;
+            color: var(--wortholic-text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--wortholic-text);
+            background: rgba(59, 130, 246, 0.1);
+            border-left-color: var(--wortholic-primary);
+            text-decoration: none;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .app-header {
+            background: var(--wortholic-card);
+            border-bottom: 1px solid var(--wortholic-border);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+
+        /* Content Area */
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            padding: 1.5rem;
+            gap: 1.5rem;
+            overflow: hidden;
+        }
+
+        .research-panel {
+            flex: 2;
+            background: var(--wortholic-card);
+            border-radius: 12px;
+            border: 1px solid var(--wortholic-border);
+            overflow: hidden;
+            padding: 2rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-panel {
+            flex: 1;
+            background: var(--wortholic-card);
+            border-radius: 12px;
+            border: 1px solid var(--wortholic-border);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 140px);
+            overflow: hidden;
+        }
+
+        /* Research Form */
+        .research-form {
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--wortholic-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: white !important;
+            color: #000000 !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--wortholic-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        .form-control option {
+            background: white !important;
+            color: #000000 !important;
+            padding: 0.5rem;
+        }
+
+        select.form-control {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 3rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--wortholic-primary), var(--wortholic-secondary));
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Progress Section */
+        .progress-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid var(--wortholic-accent);
+        }
+
+        .progress-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+            color: #000000;
+            font-weight: 600;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e5e7eb;
+            border-top: 2px solid var(--wortholic-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Chat Interface */
+        .chat-header {
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--wortholic-border);
+            margin-bottom: 1rem;
+        }
+
+        .chat-title {
+            font-weight: 600;
+            color: var(--wortholic-text);
+            margin: 0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            padding-right: 0.5rem;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            max-width: 85%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .message.user {
+            background: var(--wortholic-primary);
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.assistant {
+            background: var(--wortholic-bg);
+            color: var(--wortholic-text);
+            border: 1px solid var(--wortholic-border);
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--wortholic-border);
+            border-radius: 8px;
+            background: var(--wortholic-bg);
+            color: var(--wortholic-text);
+        }
+
+        .chat-input button {
+            padding: 0.75rem 1rem;
+            background: var(--wortholic-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Report Display */
+        .report-container {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .report-title {
+            font-weight: 600;
+            color: var(--wortholic-dark);
+            margin: 0;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .download-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid var(--wortholic-primary);
+            color: var(--wortholic-primary);
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .download-btn:hover {
+            background: var(--wortholic-primary);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-wrapper {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .chat-panel {
+                max-height: 400px;
+            }
+        }
+
+        /* Animation utilities */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="./static/logo.png" alt="Wortholic" class="sidebar-logo">
+            <div>
+                <h1 class="sidebar-title">Wortholic</h1>
+                <p class="sidebar-subtitle">AI Research Platform</p>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#research" class="nav-item active" data-section="research">
+                <i class="fas fa-search"></i>
+                <span>Research</span>
+            </a>
+            <a href="#history" class="nav-item" data-section="history">
+                <i class="fas fa-history"></i>
+                <span>History</span>
+            </a>
+            <a href="#analytics" class="nav-item" data-section="analytics">
+                <i class="fas fa-chart-bar"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="#settings" class="nav-item" data-section="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+        
+        <div style="padding: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.8rem;">
+                <div>© 2025 Wortholic</div>
+                <div>AI Research Platform</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="app-header">
+            <div>
+                <button id="sidebarToggle" class="btn btn-link text-white d-md-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="header-title">Research Dashboard</h1>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="research-panel">
+                <div class="research-form">
+                    <h2 style="margin-bottom: 1.5rem; color: var(--wortholic-dark); font-weight: 600;">
+                        <img src="./static/logo.png" alt="Wortholic" style="width: 32px; height: 32px; margin-right: 10px; vertical-align: middle;">
+                        Start Your Research
+                    </h2>
+                    
+                    <form method="POST" id="researchForm">
+                        <div class="form-group">
+                            <label for="task" class="form-label">What would you like me to research?</label>
+                            <textarea id="task" name="task" class="form-control" rows="3" placeholder="Enter your research topic, question, or idea..." required></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="report_type" class="form-label">Report Type</label>
+                                    <select name="report_type" id="report_type" class="form-control" required>
+                                        <option value="research_report">Summary - Quick Overview (~2 min)</option>
+                                        <option value="detailed_report" selected>Detailed - Comprehensive Analysis (~5 min)</option>
+                                        <option value="resource_report">Resource Report - Key Sources & References</option>
+                                        <option value="deep">Deep Research - Multi-Topic Analysis (~10 min)</option>
+                                        <option value="outline_report">Research Outline - Structured Framework</option>
+                                        <option value="custom_report">Custom Report - Tailored Analysis</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="tone" class="form-label">Research Tone</label>
+                                    <select name="tone" id="tone" class="form-control" required>
+                                        <option value="Objective">Objective - Impartial Analysis</option>
+                                        <option value="Formal" selected>Formal - Academic Standards</option>
+                                        <option value="Analytical">Analytical - Critical Evaluation</option>
+                                        <option value="Informative">Informative - Clear Information</option>
+                                        <option value="Critical">Critical - Validity Assessment</option>
+                                        <option value="Professional">Professional - Business Context</option>
+                                        <option value="Technical">Technical - Detailed Specifications</option>
+                                        <option value="Creative">Creative - Innovative Perspectives</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="report_source" class="form-label">Research Sources</label>
+                            <select name="report_source" id="report_source" class="form-control" required>
+                                <option value="web" selected>Web Sources - Online Information</option>
+                                <option value="academic">Academic Sources - Scholarly Articles</option>
+                                <option value="news">News Sources - Current Events & Updates</option>
+                                <option value="social">Social Media - Public Opinions & Trends</option>
+                                <option value="government">Government - Official Reports & Data</option>
+                                <option value="financial">Financial - Market & Economic Data</option>
+                                <option value="technical">Technical - Documentation & Specs</option>
+                                <option value="hybrid">Hybrid - Multiple Source Types</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" id="submitButton">
+                            <i class="fas fa-search" style="margin-right: 8px;"></i>
+                            Begin Research
+                        </button>
+                    </form>
+                </div>
+
+                <div class="progress-section" id="progressSection" style="display: none;">
+                    <div class="progress-title">
+                        <div class="spinner" id="spinner"></div>
+                        <span>Research in Progress</span>
+                    </div>
+                    <p style="color: #6b7280; margin-bottom: 1rem;">Wortholic is analyzing your topic and gathering comprehensive insights...</p>
+                    <div id="output"></div>
+                </div>
+
+                <div class="report-container" id="reportContainer" style="display: none;">
+                    <div class="report-header">
+                        <h3 class="report-title">Research Report</h3>
+                        <div class="download-buttons" id="downloadButtons">
+                            <a href="#" class="download-btn" id="downloadPDF">
+                                <i class="fas fa-file-pdf"></i> PDF
+                            </a>
+                            <a href="#" class="download-btn" id="downloadWord">
+                                <i class="fas fa-file-word"></i> Word
+                            </a>
+                            <a href="#" class="download-btn" id="downloadMD">
+                                <i class="fas fa-file-alt"></i> Markdown
+                            </a>
+                        </div>
+                    </div>
+                    <div id="reportContent"></div>
+                </div>
+            </div>
+
+            <div class="chat-panel">
+                <div class="chat-header">
+                    <h3 class="chat-title">
+                        <i class="fas fa-comments" style="margin-right: 8px; color: var(--wortholic-primary);"></i>
+                        Research Assistant
+                    </h3>
+                    <p style="color: #6b7280; font-size: 0.9rem; margin: 0.5rem 0 0 0;">Ask questions about your research</p>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message assistant">
+                        <strong>Wortholic Assistant</strong>
+                        <p>Hello! I'm your AI research assistant. Start a research above and I'll be here to answer any questions about your findings.</p>
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Ask about your research..." disabled>
+                    <button id="chatSend" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+    <script src="/site/scripts.js"></script>
+    <script>
+        // Sidebar toggle for mobile
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Enhanced form submission with better UI feedback
+        document.getElementById('researchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitButton');
+            const progressSection = document.getElementById('progressSection');
+            const chatInput = document.getElementById('chatInput');
+            const chatSend = document.getElementById('chatSend');
+            
+            // Show progress
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i>Starting Research...';
+            progressSection.style.display = 'block';
+            progressSection.classList.add('fade-in');
+            
+            // Enable chat after research starts
+            setTimeout(() => {
+                chatInput.disabled = false;
+                chatSend.disabled = false;
+                chatInput.placeholder = "Research started! Ask me anything...";
+            }, 2000);
+        });
+
+        // Auto-resize textarea
+        const taskTextarea = document.getElementById('task');
+        taskTextarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+
+        // Chat functionality
+        const chatInput = document.getElementById('chatInput');
+        const chatSend = document.getElementById('chatSend');
+        const chatMessages = document.getElementById('chatMessages');
+
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'assistant'}`;
+            messageDiv.innerHTML = isUser ? 
+                `<p>${content}</p>` : 
+                `<strong>Wortholic Assistant</strong><p>${content}</p>`;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        chatSend.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !chatInput.disabled) {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            addMessage(message, true);
+            chatInput.value = '';
+            
+            // Simulate AI response
+            setTimeout(() => {
+                addMessage("I'm analyzing your question based on the research data. This feature will be enhanced with the actual research context soon.");
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>
